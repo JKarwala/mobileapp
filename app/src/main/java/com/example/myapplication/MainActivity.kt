@@ -55,17 +55,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-//
-//@Composable
-//fun ShowCountriesList(viewModel: MainViewModel) {
-//    val countries by viewModel.immutableCountriesData.observeAsState(emptyList())
-//    Log.d("Main: Count of countries", countries.count().toString())
-//    if (countries.isNotEmpty()) {
-//        countries.forEachIndexed { index, country: Country ->
-//            Log.d("Main", "$index ${country.name.common}, ${country.population}")
-//        }
-//    }
-//}
 
 @Composable
 fun MainView(viewModel: MainViewModel) {
@@ -84,11 +73,6 @@ fun MainView(viewModel: MainViewModel) {
         }
     }
 }
-//                painter = painterResource(id = R.drawable.pl),
-//                contentDescription = "Polish flag",
-//                modifier = Modifier.scale(0.3F)
-//            )
-
 
 @Composable
 fun LoadingView() {
