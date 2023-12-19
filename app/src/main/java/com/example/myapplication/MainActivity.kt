@@ -62,10 +62,10 @@ fun MainView(viewModel: MainViewModel) {
 
     when {
         uiState.isLoading -> {
-            
+            LoadingView()
         }
         uiState.error != null -> {
-            
+            ErrorView()
         }
         uiState.data != null -> {
             uiState.data
@@ -121,7 +121,9 @@ fun CountriesView(name: String, population: Int, flagUrl: String) {
                 Text (
                     text = name,
                     color = Color.Black,
-                    modifier = Modifier.scale(1.4F).padding(10.dp)
+                    modifier = Modifier
+                        .scale(1.4F)
+                        .padding(10.dp)
                 )
                 Row {
                     Text (
