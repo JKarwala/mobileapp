@@ -1,12 +1,14 @@
 package com.example.myapplication
 
 import MainViewModel
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +38,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import coil.compose.AsyncImage
 import com.example.myapplication.repository.Country
 
-
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
@@ -49,15 +50,21 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainView(viewModel = viewModel)
+                    MainView(viewModel = viewModel, onClick = { ccn3 -> navigateToDetailsActivity(ccn3)})
                 }
             }
         }
     }
+
+    fun navigateToDetailsActivity(ccn3: String) {
+        val detailsIntent = Intent(this, DetailsActivity::class.java)
+        detailsIntent.putExtra("CUSTOM_CCN3", ccn3)
+        startActivity(detailsIntent)
+    }
 }
 
 @Composable
-fun MainView(viewModel: MainViewModel) {
+fun MainView(viewModel: MainViewModel, onClick: (String) -> Unit) {
     val uiState by viewModel.immutableCountriesData.observeAsState(UIState())
 
     when {
@@ -69,7 +76,7 @@ fun MainView(viewModel: MainViewModel) {
         }
         uiState.data != null -> {
             uiState.data
-                ?.let { CountriesListView(countries = it) }
+                ?.let { CountriesListView(countries = it, onClick = { ccn3 -> onClick.invoke(ccn3)}) }
         }
     }
 }
@@ -95,19 +102,21 @@ fun ErrorView() {
 }
 
 @Composable
-fun CountriesListView(countries: List<Country>) {
+fun CountriesListView(countries: List<Country>, onClick: (String) -> Unit) {
     if (countries.isNotEmpty()) {
         LazyColumn {
             items(countries) { country ->
-                CountriesView(country.name.common, country.population, country.flags.png)
+                CountriesView(country.ccn3, country.name.common, country.population, country.flags.png, onClick = {ccn3 -> onClick.invoke(ccn3)})
             }
         }
     }
 }
 
 @Composable
-fun CountriesView(name: String, population: Int, flagUrl: String) {
-    Column {
+fun CountriesView(ccn3: String, name: String, population: Int, flagUrl: String, onClick: (String) -> Unit) {
+    Column (
+        modifier = Modifier.clickable { onClick.invoke(ccn3) }
+    ) {
         Row {
             AsyncImage(
                 model = flagUrl,
